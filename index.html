@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS Tracking System Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+            background: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #000000;
+            border: 2px solid #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #000000;
+            padding: 40px;
+            border-bottom: 2px solid #ffffff;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .header .subtitle {
+            color: #ff0000;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .topology {
+            padding: 40px;
+        }
+
+        .layer {
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .layer-title {
+            color: #ff0000;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid #ff0000;
+            padding-bottom: 5px;
+        }
+
+        .component {
+            background: #000000;
+            border: 2px solid #ffffff;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .component-header {
+            color: #ffffff;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .component-type {
+            background: #ff0000;
+            color: #ffffff;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .code-block {
+            background: #000000;
+            border: 1px solid #ff0000;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+            font-size: 0.9rem;
+            color: #ffffff;
+        }
+
+        .devices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .device {
+            background: #000000;
+            border: 2px solid #ff0000;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #ffffff;
+        }
+
+        .flow-arrow {
+            text-align: center;
+            margin: 25px 0;
+            color: #ff0000;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .protocol {
+            background: #ff0000;
+            color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 6px;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            color: #ffffff;
+            position: relative;
+            padding-left: 25px;
+            font-size: 1rem;
+        }
+
+        .feature-list li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        .tech-stack {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tech-tag {
+            background: #000000;
+            border: 1px solid #ffffff;
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-family: 'SF Mono', monospace;
+            font-weight: 500;
+        }
+
+        .split-components {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+        }
+
+        .endpoint {
+            background: #000000;
+            border: 1px solid #ff0000;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin: 8px 0;
+            font-family: 'SF Mono', monospace;
+            font-size: 0.9rem;
+            color: #ffffff;
+        }
+
+        .endpoint .method {
+            color: #ff0000;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+
+        .footer {
+            background: #000000;
+            border-top: 2px solid #ffffff;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .github-link {
+            background: #ff0000;
+            color: #ffffff;
+            padding: 15px 30px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 20px;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .github-link:hover {
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #ff0000;
+        }
+
+        .architecture-diagram {
+            background: #000000;
+            border: 2px solid #ffffff;
+            border-radius: 8px;
+            padding: 40px;
+            margin: 40px 0;
+            font-family: 'SF Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 2.5;
+            overflow-x: auto;
+        }
+
+        .diagram-layer {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .diagram-box {
+            display: inline-block;
+            background: #000000;
+            border: 2px solid #ffffff;
+            padding: 15px 25px;
+            border-radius: 6px;
+            margin: 8px;
+            color: #ffffff;
+            min-width: 180px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .diagram-box.critical {
+            border-color: #ff0000;
+            color: #ff0000;
+        }
+
+        .diagram-arrow {
+            color: #ff0000;
+            font-size: 1.5rem;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        .diagram-split {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .data-flow {
+            background: #000000;
+            border: 2px solid #ff0000;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .flow-step {
+            margin: 15px 0;
+            padding: 10px 0;
+            border-bottom: 1px solid #ffffff;
+        }
+
+        .flow-step:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            color: #ff0000;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+
+        .detailed-explanation {
+            background: #000000;
+            border: 1px solid #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .explanation-title {
+            color: #ff0000;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .split-components {
+                grid-template-columns: 1fr;
+            }
+            
+            .devices-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .diagram-split {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>GPS TRACKING SYSTEM</h1>
+            <p class="subtitle">REAL-TIME LOCATION INTELLIGENCE ARCHITECTURE</p>
+        </div>
+
+        <div class="topology">
+            <!-- System Overview -->
+            <div class="layer">
+                <div class="layer-title">// SYSTEM ARCHITECTURE OVERVIEW</div>
+                <div class="architecture-diagram">
+                    <div class="diagram-layer">
+                        <div class="diagram-split">
+                            <div class="diagram-box">📱 MOBILE APPS</div>
+                            <div class="diagram-box">🚗 IOT DEVICES</div>
+                            <div class="diagram-box">📡 GPS TRACKERS</div>
+                        </div>
+                        <div class="diagram-arrow">↓ HTTPS/MQTT/WEBSOCKET (TLS)</div>
+                    </div>
+
+                    <div class="diagram-layer">
+                        <div class="diagram-box critical">🚪 INGEST GATEWAY</div>
+                        <div class="diagram-arrow">↓ AUTHENTICATION & VALIDATION</div>
+                    </div>
+
+                    <div class="diagram-layer">
+                        <div class="diagram-split">
+                            <div class="diagram-box">🌊 STREAM PROCESSING</div>
+                            <div class="diagram-box">🗺️ GEOFENCE ENGINE</div>
+                        </div>
+                        <div class="diagram-arrow">↓ REAL-TIME PROCESSING</div>
+                    </div>
+
+                    <div class="diagram-layer">
+                        <div class="diagram-split">
+                            <div class="diagram-box critical">🗄️ POSTGRESQL + POSTGIS</div>
+                            <div class="diagram-box critical">⚡ MESSAGE BUS</div>
+                        </div>
+                        <div class="diagram-arrow">↓ DATA STORAGE & MESSAGING</div>
+                    </div>
+
+                    <div class="diagram-layer">
+                        <div class="diagram-box">🗺️ VECTOR TILE GENERATOR</div>
+                        <div class="diagram-arrow">↓ MAP TILE GENERATION</div>
+                    </div>
+
+                    <div class="diagram-layer">
+                        <div class="diagram-split">
+                            <div class="diagram-box">🔌 REST/GRAPHQL API</div>
+                            <div class="diagram-box">🔄 WEBSOCKET GATEWAY</div>
+                        </div>
+                        <div class="diagram-arrow">↓ API LAYER</div>
+                    </div>
+
+                    <div class="diagram-layer">
+                        <div class="diagram-box critical">💻 FRONTEND APPLICATION</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Flow Explanation -->
+            <div class="layer">
+                <div class="layer-title">// DATA FLOW EXPLANATION</div>
+                <div class="data-flow">
+                    <div class="flow-step">
+                        <span class="step-number">1.</span>
+                        <strong>GPS devices send location data</strong> via HTTPS/MQTT/WebSocket with TLS encryption
+                    </div>
+                    <div class="flow-step">
+                        <span class="step-number">2.</span>
+                        <strong>Ingest Gateway validates and authenticates</strong> incoming requests, applies rate limiting
+                    </div>
+                    <div class="flow-step">
+                        <span class="step-number">3.</span>
+                        <strong>Stream Processing normalizes data</strong> and applies geospatial enrichment algorithms
+                    </div>
+                    <div class="flow-step">
+                        <span class="step-number">4.</span>
+                        <strong>Geofence Engine checks boundaries</strong> using PostGIS ST_Contains operations
+                    </div>
+                    <div class="flow-step">
+                        <span class="step-number">5.</span>
+                        <strong>Data stored in PostgreSQL</strong> with PostGIS extensions and TimescaleDB partitioning
+                    </div>
+                    <div class="flow-step">
+                        <span class="step-number">6.</span>
+                        <strong>Real-time events published</strong> to message bus for live updates
+                    </div>
+                    <div class="flow-step">
+                        <span class="step-number">7.</span>
+                        <strong>Vector tiles generated</strong> dynamically for map visualization
+                    </div>
+                    <div class="flow-step">
+                        <span class="step-number">8.</span>
+                        <strong>Frontend receives data</strong> via REST API and WebSocket connections
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Sources -->
+            <div class="layer">
+                <div class="layer-title">// DATA SOURCES</div>
+                <div class="devices-grid">
+                    <div class="device">MOBILE DEVICES</div>
+                    <div class="device">IOT GPS TRACKERS</div>
+                    <div class="device">FLEET VEHICLES</div>
+                </div>
+                
+                <div class="detailed-explanation">
+                    <div class="explanation-title">GPS Data Structure:</div>
+                    <div class="code-block">
+struct GPSData {
+    lat: f64,           // Latitude coordinate
+    lng: f64,           // Longitude coordinate  
+    timestamp: i64,     // Unix timestamp
+    accuracy: f32,      // GPS accuracy in meters
+    status: String,     // Device status (active/idle/offline)
+    battery: u8,        // Battery percentage (0-100)
+    operator: String,   // Network operator
+    tech: String        // Technology (4G/5G/WiFi)
+}</div>
+                </div>
+
+                <div class="protocol">SECURE TRANSMISSION: HTTPS/MQTT/WEBSOCKET (TLS 1.3)</div>
+                <div class="flow-arrow">↓</div>
+            </div>
+
+            <!-- Ingest Layer -->
+            <div class="layer">
+                <div class="layer-title">// INGEST LAYER</div>
+                <div class="component">
+                    <div class="component-header">
+                        INGEST GATEWAY
+                        <span class="component-type">API EDGE</span>
+                    </div>
